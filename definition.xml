@@ -8,10 +8,11 @@
 
 <html lang="en">
 	<head>
+		#includeResources(jquery,uptimecss)
+
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 		<title>Current Status</title>
-		<link href="/styles/uptime.css" type="text/css" rel="stylesheet" />
 		<style>
 			#bigTableHeading {
 				padding: 7px;
@@ -97,13 +98,10 @@
 			}
 		</style>
 
-		#includeResources()
-		
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptimeApi.js"></script>
 		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptimeElementStatusSimpleTableChart.js"></script>
-		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptime.CommonFunctions.js"></script>
-		
-		<script type="text/javascript" src="/ajax/jquery.dataTables.js"></script>
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptime.CommonFunctions.js"></script>		
 		
 	</head>
 
@@ -213,6 +211,9 @@
 					displayChart(settings);
 				}
 				
+				function elementSort(arg1, arg2) {
+					return naturalSort(arg1.name, arg2.name);
+				}
 				
 				// Main Gadget Logic Start
 				function goodLoad(settings) {
@@ -225,6 +226,7 @@
 						// fill in element drop down list
 						var optionsValues = '<select id="elementId">';
 						var optionsTypeValues = '<select id="elementType" style="visibility: hidden;">';
+						data.sort(elementSort);
 						$.each(data, function() {
 							
 							//console.log(this.typeSubtype);
