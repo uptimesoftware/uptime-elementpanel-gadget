@@ -191,7 +191,7 @@
 									'isAcknowledged':isAcknowledged,
 									'acknowledgedComment':acknowledgedComment
 					};
-					uptimeGadget.saveSettings(settings, onGoodSave, onBadAjax);
+					uptimeGadget.saveSettings(settings).then(onGoodSave, onBadAjax);
 				});
 				$("#cancelSettings").click(function(){
 					$("#widgetChart").show();
@@ -216,7 +216,7 @@
 				}
 				
 				// Main Gadget Logic Start
-				function goodLoad(settings) {
+				function onGoodLoad(settings) {
 					var statusBar = $("#statusBar");
 					
 					uptime_api.getElements("isMonitored=true", function(data) {
@@ -297,7 +297,9 @@
 				
 				// Always load these at the end
 				uptimeGadget.registerOnEditHandler(showEditPanel);
-				uptimeGadget.registerOnLoadHandler(function(){uptimeGadget.loadSettings(goodLoad, onBadAjax);});
+				uptimeGadget.registerOnLoadHandler(function() {
+					uptimeGadget.loadSettings().then(onGoodLoad, onBadAjax);
+				});
 				//uptimeGadget.registerOnUploadFile(function (e){});
 
 			});
