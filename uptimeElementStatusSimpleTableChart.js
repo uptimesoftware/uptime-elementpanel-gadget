@@ -5,9 +5,6 @@ if (typeof UPTIME == "undefined") {
 // Define class/function name
 if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 	UPTIME.ElementStatusSimpleTableChart = function(options) {
-		var chartDivId = null;
-		var lastRefreshBarDivId = null;
-		var statusBarDivId = null;
 		var elementId = null;
 		var elementName = null;
 		var elementType = null;
@@ -55,9 +52,6 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		});
 
 		if (typeof options == "object") {
-			chartDivId = '#' + options.chartDivId;
-			lastRefreshBarDivId = "#" + options.lastRefreshBarDivId;
-			statusBarDivId = '#' + options.statusBarDivId;
 			elementId = options.elementId;
 			elementName = options.elementName;
 			elementType = options.elementType;
@@ -212,15 +206,6 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 						}
 					});
 
-			// update lastRefreshBar
-			$(lastRefreshBarDivId).show();
-			var dt = new Date();
-			$(lastRefreshBarDivId).html(
-					"<small>Last refreshed: " + checkDateTimeTwoDigits(dt.getMonth() + 1) + "/"
-							+ checkDateTimeTwoDigits(dt.getDate()) + "/" + dt.getFullYear() + " - "
-							+ checkDateTimeTwoDigits(dt.getHours()) + ":" + checkDateTimeTwoDigits(dt.getMinutes()) + ":"
-							+ checkDateTimeTwoDigits(dt.getSeconds()) + "</small>");
-
 			// DataTable
 			statusTable.dataTable({
 				"aoColumnDefs" : dataTableColumns,
@@ -236,7 +221,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			$.ajax("/api/v1/elements/" + elementId + "/status", {
 				cache : false
 			}).done(renderTable).fail(function(jqXHR, textStatus, errorThrown) {
-				var statusBar = $(statusBarDivId);
+				var statusBar = $('#statusBar');
 				statusBar.css("color", "red");
 				statusBar.text("Can't connect to the up.time API.");
 				statusBar.show();
