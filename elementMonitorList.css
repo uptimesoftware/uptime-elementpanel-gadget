@@ -1,0 +1,38 @@
+#bigTableHeading {
+	padding: 7px;
+	text-align: left;
+	font-size: 130%;
+}
+
+a {
+	color: #5F7EA7;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+th {
+	background-color: #C2C3C4;
+}
+
+td a {
+	padding: 3px;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.status-icon {
+	font-size: x-large;
+}
+
+.topoBox {
+	float: left;
+	border: solid 1px #000000;
+	display: table;
+	padding: 1px;
+	margin: 0px 0px 1px 1px;
+	border-radius: 5px;
+}
