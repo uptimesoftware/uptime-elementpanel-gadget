@@ -38,7 +38,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			}
 		}
 
-		jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+		$.extend($.fn.dataTableExt.oSort, {
 			"enum-pre" : statusSort,
 			"enum-asc" : function(a, b) {
 				return ((a < b) ? -1 : ((a > b) ? 1 : 0));
@@ -140,13 +140,12 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			}
 
 			// first let's empty out the existing table(s)
-			if ($('#statusTable').length != 0) {
+			if ($.fn.dataTable.fnIsDataTable(document.getElementById('#statusTable'))) {
 				$('#statusTable').dataTable().fnDestroy();
 			}
-			$(chartDivId).empty();
-			$(chartDivId).append("<table id='headerTable' style='width:100%; border:0px;'></table>");
-			$(chartDivId).append("<table id='statusTable' style='width:100%; border:0px;'><tbody></tbody></table>");
-			$(chartDivId).append("<table id='topologyTable' style='width:100%; border:0px;'><tbody></tbody></table>");
+			var headerTable = $('#headerTable').empty();
+			var statusTable = $('#statusTable').empty();
+			var topologyTable = $('#topologyTable').empty();
 
 			// display topological dependencies, if there
 			// are any
@@ -160,9 +159,8 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 							+ "</div></a>";
 				}
 			}
-			$("#topologyTable").append(
-					"<tr><th colspan='2' style='text-align: left;'><div>Topological Dependencies:</div>" + divboxes
-							+ "</th></tr>");
+			topologyTable.append("<tr><th colspan='2' style='text-align: left;'><div>Topological Dependencies:</div>" + divboxes
+					+ "</th></tr>");
 
 			// convert strings to dates
 			var currentDateTime = new Date();
@@ -170,11 +168,10 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			var lastTransitionDateTime = Date.parse(elementStatus.lastTransitionTime);
 
 			var stateLength = DateDiff.getDifferenceInEnglish(currentDateTime, lastTransitionDateTime);
-			$("#headerTable").append(
-					"<tr><th id='bigTableHeading'><a href='/main.php?section=Profile&subsection=&id=" + elementStatus.id
-							+ "&name=" + elementStatus.name + "' target='_top'>" + elementName.toUpperCase()
-							+ "<br/><small><small>" + elementStatus.status + " for " + stateLength + "</small></small>"
-							+ "</a></th><th>" + getStatusIcon(elementStatus.status) + "</th></tr>");
+			headerTable.append("<tr><th id='bigTableHeading'><a href='/main.php?section=Profile&subsection=&id="
+					+ elementStatus.id + "&name=" + elementStatus.name + "' target='_top'>" + elementName.toUpperCase()
+					+ "<br/><small><small>" + elementStatus.status + " for " + stateLength + "</small></small>" + "</a></th><th>"
+					+ getStatusIcon(elementStatus.status) + "</th></tr>");
 
 			$.each(elementStatus.monitorStatus,
 					function() {
@@ -210,9 +207,8 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 								monitorAckMessage = "<td>" + this.acknowledgedComment + "</td>";
 							}
 
-							$("#statusTable").append(
-									"<tr>" + monitorName + monitorStatus + monitorLastCheck + monitorLastTransition
-											+ monitorMessage + monitorIsAckd + monitorAckMessage + "</tr>");
+							statusTable.append("<tr>" + monitorName + monitorStatus + monitorLastCheck + monitorLastTransition
+									+ monitorMessage + monitorIsAckd + monitorAckMessage + "</tr>");
 						}
 					});
 
@@ -226,7 +222,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 							+ checkDateTimeTwoDigits(dt.getSeconds()) + "</small>");
 
 			// DataTable
-			$('#statusTable').dataTable({
+			statusTable.dataTable({
 				"aoColumnDefs" : dataTableColumns,
 				"aaSorting" : [ [ 1, "asc" ], [ 0, "asc" ] ],
 				"bInfo" : false,
@@ -267,9 +263,6 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 				if (chartTimer) {
 					updateChart();
 				}
-			},
-			destroy : function() {
-				$('#statusTable').dataTable().fnDestroy();
 			}
 		};
 		return publicFns; // Important: we need to return the public
