@@ -199,7 +199,8 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 								monitorIsAckd = "<td>" + this.isAcknowledged + "</td>";
 							}
 							if (doAcknowledgedComment) {
-								monitorAckMessage = "<td>" + this.acknowledgedComment + "</td>";
+								monitorAckMessage = "<td>" + ((this.acknowledgedComment) ? this.acknowledgedComment : " ")
+										+ "</td>";
 							}
 
 							statusTable.append("<tr>" + monitorName + monitorStatus + monitorLastCheck + monitorLastTransition
