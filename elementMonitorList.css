@@ -37,6 +37,14 @@ td a {
 	border-radius: 5px;
 }
 
+.editSection {
+	padding: 3px;
+}
+
+.buttonsDiv {
+	padding: 3px;
+}
+
 #statusBar {
 	position: absolute;
 	top: 10px;

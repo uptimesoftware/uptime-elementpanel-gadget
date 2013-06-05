@@ -72,16 +72,14 @@ $(function() {
 		}).done(function(data, textStatus, jqXHR) {
 			clearStatusBar();
 			// fill in element drop down list
-			var optionsValues = '<select id="elementId">';
 			data.sort(elementSort);
+			var elementSelector = $('#elementId');
 			$.each(data, function() {
 				if (!this.isMonitored) {
 					return;
 				}
-				optionsValues += '<option value="' + this.id + '">' + this.name + '</option>';
+				elementSelector.append($("<option />").val(this.id).text(this.name));
 			});
-			optionsValues += '</select>';
-			$('#availableElements').html(optionsValues);
 
 			// load existing saved settings, now that the drop down list has
 			// been loaded

@@ -24,27 +24,35 @@
 	</head>
 	<body>
 		<div id="widgetSettings">
-			Select Element:
+
 			<form id="widgetOptions">
-				<div id="availableElements"></div>
-				Monitor info to display:
-				<br/>
-				<input type="checkbox" checked id="lastCheckTime" name="columnOptions" value="lastCheckTime"> Last Check Time
-				<br/>
-				<input type="checkbox" checked id="lastTransitionTime" name="columnOptions" value="lastTransitionTime"> Duration
-				<br/>
-				<input type="checkbox"  id="message" name="columnOptions" value="message"> Monitor Message
-				<br/>
-				<input type="checkbox"  id="isAcknowledged" name="columnOptions" value="isAcknowledged"> Is Acknowledged
-				<br/>
-				<input type="checkbox"  id="acknowledgedComment" name="columnOptions" value="acknowledgedComment"> Acknowledgement Comment
-				<br/>
-				<br/>
-				Refresh Rate:
-				<input type="text" checked id="refreshRate" name="refreshRate" value="15"> seconds
-				<br/><br/>
-				<input id="saveSettings" type="button" value="Save"/>
-				<input id="cancelSettings" type="button" value="Cancel"/>
+				<div class="elementSelectorDiv editSection">
+					<label for="elementId">Select Element:</label><br/>
+					<select id="elementId">
+						<option value="-1">Loading...</option>
+					</select>
+				</div>
+				<div class="monitorInfoDiv editSection">
+					Display:
+					<br/>
+					<input type="checkbox" checked id="lastCheckTime" name="columnOptions" value="lastCheckTime"> Last Check Time
+					<br/>
+					<input type="checkbox" checked id="lastTransitionTime" name="columnOptions" value="lastTransitionTime"> Duration
+					<br/>
+					<input type="checkbox"  id="message" name="columnOptions" value="message"> Monitor Message
+					<br/>
+					<input type="checkbox"  id="isAcknowledged" name="columnOptions" value="isAcknowledged"> Is Acknowledged
+					<br/>
+					<input type="checkbox"  id="acknowledgedComment" name="columnOptions" value="acknowledgedComment"> Acknowledgement Comment
+				</div>
+				<div class="refreshRateDiv editSection">
+					Refresh Rate:
+					<input type="text" checked id="refreshRate" name="refreshRate" value="15"> seconds
+				</div>
+				<div class="buttonsDiv">
+					<input id="saveSettings" type="button" value="Save"/>
+					<input id="cancelSettings" type="button" value="Cancel"/>
+				</div>
 			</form>
 		</div>
 
