@@ -4,7 +4,7 @@ if (typeof UPTIME == "undefined") {
 
 // Define class/function name
 if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
-	UPTIME.ElementStatusSimpleTableChart = function(options) {
+	UPTIME.ElementStatusSimpleTableChart = function(options, displayStatusBar, clearStatusBar) {
 		var elementId = null;
 		var elementName = null;
 		var elementType = null;
@@ -84,6 +84,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function renderTable(elementStatus, textStatus, jqXHR) {
+			clearStatusBar();
 			// let's setup the table columns
 			var dataTableColumns = new Array();
 			dataTableColumns = [ {
@@ -220,12 +221,11 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		function updateChart() {
 			$.ajax("/api/v1/elements/" + elementId + "/status", {
 				cache : false
-			}).done(renderTable).fail(function(jqXHR, textStatus, errorThrown) {
-				var statusBar = $('#statusBar');
-				statusBar.css("color", "red");
-				statusBar.text("Can't connect to the up.time API.");
-				statusBar.show();
-			});
+			}).done(renderTable).fail(
+					function(jqXHR, textStatus, errorThrown) {
+						displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
+								"Error Getting Element Status from up.time Controller");
+					});
 
 			// Now let's set refresh rate for updating the table
 			chartTimer = window.setTimeout(updateChart, refreshRate * 1000);

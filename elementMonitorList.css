@@ -36,3 +36,11 @@ td a {
 	margin: 0px 0px 1px 1px;
 	border-radius: 5px;
 }
+
+#statusBar {
+	position: absolute;
+	top: 10px;
+	left: 0px;
+	display: none;
+	width: 100%;
+}
