@@ -140,6 +140,9 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			}
 
 			// first let's empty out the existing table(s)
+			if ($('#statusTable').length != 0) {
+				$('#statusTable').dataTable().fnDestroy();
+			}
 			$(chartDivId).empty();
 			$(chartDivId).append("<table id='headerTable' style='width:100%; border:0px;'></table>");
 			$(chartDivId).append("<table id='statusTable' style='width:100%; border:0px;'><tbody></tbody></table>");
