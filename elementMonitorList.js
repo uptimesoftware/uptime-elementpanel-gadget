@@ -7,11 +7,6 @@ $(function() {
 
 	$("#saveSettings").click(function() {
 		var elementId = $('#elementId').find(":selected").val();
-		var elementName = $('#elementId').find(":selected").text();
-
-		var selectedIndex = $('#elementId').get(0).selectedIndex;
-		var elementType = $('#elementType')[0][selectedIndex].innerText;
-
 		var refreshRate = $('#refreshRate').val();
 		var lastCheckTime = $('#lastCheckTime').attr('checked');
 		var lastTransitionTime = $('#lastTransitionTime').attr('checked');
@@ -21,8 +16,6 @@ $(function() {
 
 		var settings = {
 			'elementId' : elementId,
-			'elementName' : elementName,
-			'elementType' : elementType,
 			'refreshRate' : refreshRate,
 			'lastCheckTime' : lastCheckTime,
 			'lastTransitionTime' : lastTransitionTime,
@@ -32,6 +25,7 @@ $(function() {
 		};
 		uptimeGadget.saveSettings(settings).then(onGoodSave, onBadAjax);
 	});
+
 	$("#cancelSettings").click(function() {
 		$("#widgetChart").show();
 		$("#widgetSettings").hide();
@@ -44,6 +38,10 @@ $(function() {
 	uptimeGadget.registerOnLoadHandler(function() {
 		uptimeGadget.loadSettings().then(onGoodLoad, onBadAjax);
 	});
+
+	function saveSettings() {
+
+	}
 
 	function showEditPanel() {
 		// stop any existing timers in the charts (for when we save and change
@@ -75,19 +73,15 @@ $(function() {
 			clearStatusBar();
 			// fill in element drop down list
 			var optionsValues = '<select id="elementId">';
-			var optionsTypeValues = '<select id="elementType" style="visibility: hidden;">';
 			data.sort(elementSort);
 			$.each(data, function() {
 				if (!this.isMonitored) {
 					return;
 				}
 				optionsValues += '<option value="' + this.id + '">' + this.name + '</option>';
-				optionsTypeValues += '<option value="' + this.id + '">' + this.typeSubtype + '</option>';
 			});
 			optionsValues += '</select>';
-			optionsTypeValues += '</select>';
 			$('#availableElements').html(optionsValues);
-			$('#availableElements').append(optionsTypeValues);
 
 			// load existing saved settings, now that the drop down list has
 			// been loaded

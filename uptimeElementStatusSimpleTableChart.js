@@ -6,8 +6,6 @@ if (typeof UPTIME == "undefined") {
 if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 	UPTIME.ElementStatusSimpleTableChart = function(options, displayStatusBar, clearStatusBar) {
 		var elementId = null;
-		var elementName = null;
-		var elementType = null;
 		var refreshRate = null;
 		var lastCheckTime = null;
 		var lastTransitionTime = null;
@@ -53,8 +51,6 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 		if (typeof options == "object") {
 			elementId = options.elementId;
-			elementName = options.elementName;
-			elementType = options.elementType;
 			refreshRate = options.refreshRate;
 			doLastCheckTime = options.lastCheckTime;
 			doLastTransitionTime = options.lastTransitionTime;
@@ -163,18 +159,18 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			var lastTransitionDateTime = Date.parse(elementStatus.lastTransitionTime);
 
 			var stateLength = DateDiff.getDifferenceInEnglish(currentDateTime, lastTransitionDateTime);
-			headerTable.append("<tr><th id='bigTableHeading'><a href='/main.php?section=Profile&subsection=&id="
-					+ elementStatus.id + "&name=" + elementStatus.name + "' target='_top'>" + elementName.toUpperCase()
-					+ "<br/><small><small>" + elementStatus.status + " for " + stateLength + "</small></small>" + "</a></th><th>"
-					+ getStatusIcon(elementStatus.status) + "</th></tr>");
+			headerTable.append("<tr><th id='bigTableHeading'><a href='"
+					+ uptimeGadget.getElementUrls(elementStatus.id, elementStatus.name).graphing + "' target='_top'>"
+					+ elementStatus.name + "<br/><small><small>" + elementStatus.status + " for " + stateLength
+					+ "</small></small>" + "</a></th><th>" + getStatusIcon(elementStatus.status) + "</th></tr>");
 
 			$.each(elementStatus.monitorStatus,
 					function() {
 						// only display the monitors that are
 						// visible (no hidden ones; ppg, etc)
 						if (this.isHidden == false) {
-							var alink = "<a href='/main.php?section=Profile&subsection=&id=" + elementStatus.id + "&name="
-									+ elementStatus.name + "&dlsection=s_status' target='_top'>";
+							var alink = "<a href='" + uptimeGadget.getElementUrls(elementStatus.id, elementStatus.name).services
+									+ "' target='_top'>";
 							var monitorName = "<td>" + alink + this.name + "</a></td>";
 							var monitorStatus = "<td class='color-text-" + this.status.toUpperCase() + "'>" + this.status
 									+ "</td>";
