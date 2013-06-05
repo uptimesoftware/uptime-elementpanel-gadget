@@ -1,5 +1,4 @@
 $(function() {
-	var uptime_api = new uptimeApi();
 	var myChart = null;
 
 	$("#widgetSettings").hide();
@@ -18,13 +17,11 @@ $(function() {
 	}
 
 	$("#saveSettings").click(function() {
-		// var radioId = $("#widgetOptions
-		// input[name=chartType]:radio:checked").val();
-		var entityId = $('#elementId').find(":selected").val();
-		var entityName = $('#elementId').find(":selected").text();
+		var elementId = $('#elementId').find(":selected").val();
+		var elementName = $('#elementId').find(":selected").text();
 
 		var selectedIndex = $('#elementId').get(0).selectedIndex;
-		var entityType = $('#elementType')[0][selectedIndex].innerText;
+		var elementType = $('#elementType')[0][selectedIndex].innerText;
 
 		var refreshRate = $('#refreshRate').val();
 		var lastCheckTime = $('#lastCheckTime').attr('checked');
@@ -33,11 +30,10 @@ $(function() {
 		var isAcknowledged = $('#isAcknowledged').attr('checked');
 		var acknowledgedComment = $('#acknowledgedComment').attr('checked');
 
-		// save group name for now, just for demo purposes
 		var settings = {
-			'entityId' : entityId,
-			'entityName' : entityName,
-			'entityType' : entityType,
+			'elementId' : elementId,
+			'elementName' : elementName,
+			'elementType' : elementType,
 			'refreshRate' : refreshRate,
 			'lastCheckTime' : lastCheckTime,
 			'lastTransitionTime' : lastTransitionTime,
@@ -71,20 +67,17 @@ $(function() {
 
 	// Main Gadget Logic Start
 	function onGoodLoad(settings) {
-		var statusBar = $("#statusBar");
-
-		uptime_api.getElements("isMonitored=true", function(data) {
-
-			// console.log(data);
-
+		$.ajax("/api/v1/elements/", {
+			cache : false
+		}).done(function(data, textStatus, jqXHR) {
 			// fill in element drop down list
 			var optionsValues = '<select id="elementId">';
 			var optionsTypeValues = '<select id="elementType" style="visibility: hidden;">';
 			data.sort(elementSort);
 			$.each(data, function() {
-
-				// console.log(this.typeSubtype);
-
+				if (!this.isMonitored) {
+					return;
+				}
 				optionsValues += '<option value="' + this.id + '">' + this.name + '</option>';
 				optionsTypeValues += '<option value="' + this.id + '">' + this.typeSubtype + '</option>';
 			});
@@ -97,11 +90,12 @@ $(function() {
 			// been loaded
 			if (settings) {
 				// update (hidden) edit panel with settings
-				$("#elementId").val(settings.entityId);
+				$("#elementId").val(settings.elementId);
 				$("#" + settings.chartType).prop("checked", true);
 				$("#refreshRate").val(settings.refreshRate);
 			}
-		}, function(jqXHR, textStatus, errorThrown) {
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			var statusBar = $("#statusBar");
 			statusBar.css("color", "red");
 			statusBar.text("Can't connect to the up.time API.");
 			statusBar.show();
@@ -137,8 +131,6 @@ $(function() {
 		settings["chartDivId"] = "widgetChart";
 		settings["statusBarDivId"] = "statusBar";
 		settings["lastRefreshBarDivId"] = "lastRefreshBar";
-		settings["uptime_api"] = uptime_api;
-		settings["UPTIME_GADGET_BASE"] = "__UPTIME_GADGET_BASE__";
 
 		// stop any existing timers in the charts (for when we save and change
 		// settings)
