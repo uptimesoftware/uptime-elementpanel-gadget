@@ -10,12 +10,6 @@ table {
 	border-collapse: collapse;
 }
 
-#bigTableHeading {
-	padding: 7px;
-	text-align: left;
-	font-size: 130%;
-}
-
 #statusTable td {
 	padding: 5px;
 	border-top-style: solid;
@@ -24,6 +18,26 @@ table {
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: #FFFFFF;
+}
+
+#elementInfoTable {
+	width: 100%;
+}
+
+#elementStatus {
+	white-space: nowrap;
+	padding: 15px;
+	font-size: 200%;
+}
+
+#topoParentsStatus {
+	width: 99%;
+	padding: 2px;
+	vertical-align: top;
+}
+
+#topoParentsStatus p {
+	line-height: 25%;
 }
 
 a {
@@ -42,7 +56,6 @@ th {
 
 .topoBox {
 	float: left;
-	border: solid 1px #000000;
 	padding: 5px;
 	margin: 0px 0px 1px 1px;
 	border-radius: 5px;
@@ -53,24 +66,24 @@ th {
 	cursor: pointer;
 }
 
-.topoBox.color-text-CRIT:hover, .status-row.color-text-CRIT:hover {
+#elementStatus.color-text-CRIT:hover, .topoBox.color-text-CRIT:hover, .status-row.color-text-CRIT:hover {
 	color: #FFFFFF;
 	background-color: #CC3333;
 }
 
-.topoBox.color-text-WARN:hover, .status-row.color-text-WARN:hover {
+#elementStatus.color-text-WARN:hover, .topoBox.color-text-WARN:hover, .status-row.color-text-WARN:hover {
 	background-color: #EDE900;
 }
 
-.topoBox.color-text-MAINT:hover, .status-row.color-text-MAINT:hover {
+#elementStatus.color-text-MAINT:hover, .topoBox.color-text-MAINT:hover, .status-row.color-text-MAINT:hover {
 	background-color: #D0D0D0;
 }
 
-.topoBox.color-text-UNKNOWN:hover, .status-row.color-text-UNKNOWN:hover {
+#elementStatus.color-text-UNKNOWN:hover, .topoBox.color-text-UNKNOWN:hover, .status-row.color-text-UNKNOWN:hover {
 	background-color: #D0D0D0;
 }
 
-.topoBox.color-text-OK:hover, .status-row.color-text-OK:hover {
+#elementStatus.color-text-OK:hover, .topoBox.color-text-OK:hover, .status-row.color-text-OK:hover {
 	background-color: #77C11B;
 }
 

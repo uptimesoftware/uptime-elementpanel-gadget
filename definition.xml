@@ -57,9 +57,11 @@
 		</div>
 
 		<div id = "widgetChart">
-			<table id='headerTable' style='width:100%; border:0px;'></table>
+			<table id="elementInfoTable"><tbody><tr>
+				<td id="elementStatus" class="element-status"></td>
+				<td id="topoParentsStatus" class="topo-parents-status">Topological Parents:<br/></td>
+			</tr><tbody></table>
 			<table id='statusTable' style='width:100%; border:0px;'><thead></thead><tbody></tbody></table>
-			<table id='topologyTable' style='width:100%; border:0px;'></table>
 		</div>
 		<div id="statusBar"></div>
 	</body>

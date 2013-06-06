@@ -148,10 +148,21 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			clearStatusBar();
 
 			// first let's empty out the existing table(s)
-			var headerTable = $('#headerTable').empty();
 			var statusTableHeader = $('#statusTable thead').empty();
 			var statusTableBody = $('#statusTable tbody').empty();
-			var topologyTable = $('#topologyTable').empty();
+
+			// convert strings to dates
+			var currentDateTime = new Date();
+			currentDateTime = currentDateTime.getTime();
+			var lastTransitionDateTime = Date.parse(elementStatus.lastTransitionTime);
+
+			var stateLength = DateDiff.getDifferenceInEnglish(currentDateTime, lastTransitionDateTime);
+			$('#elementStatus').html(
+					"<a href='" + uptimeGadget.getElementUrls(elementStatus.id, elementStatus.name).graphing + "' target='_top'>"
+							+ elementStatus.name + "<br/><small><small>" + elementStatus.status + " for " + stateLength
+							+ "</small></small>" + "</a>").removeClass(
+					'color-text-CRIT color-text-WARN color-text-MAINT color-text-UNKNOWN color-text-OK').addClass(
+					'color-text-' + elementStatus.status.toUpperCase());
 
 			// display topological dependencies, if there
 			// are any
@@ -165,19 +176,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 							+ "</div></a>";
 				}
 			}
-			topologyTable.append("<tr><th colspan='2' style='text-align: left;'><div>Topological Dependencies:</div>" + divboxes
-					+ "</th></tr>");
-
-			// convert strings to dates
-			var currentDateTime = new Date();
-			currentDateTime = currentDateTime.getTime();
-			var lastTransitionDateTime = Date.parse(elementStatus.lastTransitionTime);
-
-			var stateLength = DateDiff.getDifferenceInEnglish(currentDateTime, lastTransitionDateTime);
-			headerTable.append("<tr><th id='bigTableHeading'><a href='"
-					+ uptimeGadget.getElementUrls(elementStatus.id, elementStatus.name).graphing + "' target='_top'>"
-					+ elementStatus.name + "<br/><small><small>" + elementStatus.status + " for " + stateLength
-					+ "</small></small>" + "</a></th><th>" + getStatusIcon(elementStatus.status) + "</th></tr>");
+			$('#topoParentsStatus').html("<p>Topological Parents:</p>" + divboxes);
 
 			statusTableHeader.append(renderStatusTableHeaderRow());
 			statusTableBody.append(renderStatusTableRows(elementStatus.monitorStatus, elementStatus, currentDateTime));
