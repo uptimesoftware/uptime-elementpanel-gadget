@@ -56,9 +56,9 @@
 			</form>
 		</div>
 
-		<div id = "widgetChart" style="border:1px solid;">
+		<div id = "widgetChart">
 			<table id='headerTable' style='width:100%; border:0px;'></table>
-			<table id='statusTable' style='width:100%; border:0px;'></table>
+			<table id='statusTable' style='width:100%; border:0px;'><thead></thead><tbody></tbody></table>
 			<table id='topologyTable' style='width:100%; border:0px;'></table>
 		</div>
 		<div id="statusBar"></div>

@@ -15,40 +15,6 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 		var chartTimer = null;
 
-		// Define custom sort for DataTable on status
-		function statusSort(a) {
-			switch (a.toUpperCase()) {
-			case "CRIT":
-				return 1;
-			case "WARN":
-				return 2;
-			case "OK":
-				return 3;
-			case "UNKNOWN":
-				return 4;
-			case "MAINT":
-				return 5;
-			default:
-				return 6;
-			}
-		}
-
-		$.extend($.fn.dataTableExt.oSort, {
-			"enum-pre" : statusSort,
-			"enum-asc" : function(a, b) {
-				return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-			},
-			"enum-desc" : function(a, b) {
-				return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-			},
-			"natural-asc" : function(a, b) {
-				return naturalSort(a, b);
-			},
-			"natural-desc" : function(a, b) {
-				return naturalSort(a, b) * -1;
-			}
-		});
-
 		if (typeof options == "object") {
 			elementId = options.elementId;
 			refreshRate = options.refreshRate;
@@ -59,8 +25,74 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			doAcknowledgedComment = options.acknowledgedComment;
 		}
 
+		var statusCells = [ getStatusCellSpec("name", nameLink, "Monitor"), getStatusCellSpec("status", directValue, "Status"),
+				getStatusCellSpec("lastTransitionTime", durationValue, "Duration") ];
+
+		if (doLastCheckTime) {
+			statusCells.push(getStatusCellSpec("lastCheckTime", directValue, "Last Check"));
+		}
+		if (doMessage) {
+			statusCells.push(getStatusCellSpec("message", directValue, "Message"));
+		}
+		if (doIsAcknowledged) {
+			statusCells.push(getStatusCellSpec("isAcknowledged", directValue, "Ack"));
+		}
+		if (doAcknowledgedComment) {
+			statusCells.push(getStatusCellSpec("acknowledgedComment", directValue, "Ack Message"));
+		}
+
+		$('#statusTable tbody').on('click', onTableRowClick);
+
 		// display the table (first time)
 		updateChart();
+
+		var statusTableSort = (function() {
+			var statusMap = {
+				'CRIT' : 0,
+				'WARN' : 1,
+				'MAINT' : 2,
+				'UNKNOWN' : 3,
+				'OK' : 4,
+			};
+			return function(arg1, arg2) {
+				var sort = statusMap[arg1.status] - statusMap[arg2.status];
+				if (sort != 0) {
+					return sort;
+				}
+				sort = Date.parse(arg2.lastTransitionTime) - Date.parse(arg1.lastTransitionTime);
+				if (sort != 0) {
+					return sort;
+				}
+				sort = naturalSort(arg1.name, arg2.name);
+				if (sort != 0) {
+					return sort;
+				}
+				return 0;
+			};
+		}());
+
+		function getStatusCellSpec(field, valueGetter, header) {
+			return {
+				field : field,
+				valueGetter : valueGetter,
+				header : header
+			};
+		}
+
+		function directValue(monitorStatus, field, elementStatus, now) {
+			var val = monitorStatus[field];
+			return ((val || typeof val === 'boolean') ? val : " ");
+		}
+
+		function nameLink(monitorStatus, field, elementStatus, now) {
+			var linkPrefix = "<a href='" + uptimeGadget.getElementUrls(elementStatus.id, elementStatus.name).services
+					+ "' target='_top'>";
+			return linkPrefix + monitorStatus[field] + "</a>";
+		}
+
+		function durationValue(monitorStatus, field, elementStatus, now) {
+			return DateDiff.getDifferenceInEnglish(now, Date.parse(monitorStatus[field]));
+		}
 
 		function getStatusIcon(status) {
 			switch (status.toUpperCase()) {
@@ -79,63 +111,46 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			}
 		}
 
-		function renderTable(elementStatus, textStatus, jqXHR) {
-			clearStatusBar();
-			// let's setup the table columns
-			var dataTableColumns = new Array();
-			dataTableColumns = [ {
-				"sTitle" : "Monitor (click to sort)",
-				"aTargets" : [ 0 ],
-				"sType" : "natural"
-			}, {
-				"sTitle" : "Status",
-				"aTargets" : [ 1 ],
-				"sType" : "enum"
-			} ];
-			var colsId = 1;
+		function renderStatusTableHeaderRow() {
+			var headerRow = '<tr>';
+			$.each(statusCells, function() {
+				headerRow += '<th>' + this.header + '</th>';
+			});
+			headerRow += '</tr>';
 
-			if (doLastCheckTime) {
-				colsId++;
-				dataTableColumns.push({
-					"sTitle" : "Last Check",
-					"aTargets" : [ colsId ]
+			return headerRow;
+		}
+
+		function renderStatusTableRows(monitorStatuses, elementStatus, now) {
+			var rows = [];
+
+			monitorStatuses.sort(statusTableSort);
+			$.each(monitorStatuses, function(i, monitorStatus) {
+				if (monitorStatus.isHidden) {
+					return;
+				}
+				var row = '<tr class="status-row color-text-' + monitorStatus.status.toUpperCase() + '">';
+				$.each(statusCells, function(i, statusCell) {
+					row += '<td>' + statusCell.valueGetter(monitorStatus, statusCell.field, elementStatus, now) + '</td>';
 				});
-			}
-			if (doLastTransitionTime) {
-				colsId++;
-				dataTableColumns.push({
-					"sTitle" : "Duration",
-					"aTargets" : [ colsId ]
-				});
-			}
-			if (doMessage) {
-				colsId++;
-				dataTableColumns.push({
-					"sTitle" : "Message",
-					"aTargets" : [ colsId ]
-				});
-			}
-			if (doIsAcknowledged) {
-				colsId++;
-				dataTableColumns.push({
-					"sTitle" : "Ack",
-					"aTargets" : [ colsId ]
-				});
-			}
-			if (doAcknowledgedComment) {
-				colsId++;
-				dataTableColumns.push({
-					"sTitle" : "Ack Message",
-					"aTargets" : [ colsId ]
-				});
-			}
+				row += '</tr>';
+				rows.push(row);
+			});
+
+			return rows.join('');
+		}
+
+		function onTableRowClick(e) {
+			window.top.location.href = $('a:first', e.currentTarget).attr('href');
+		}
+
+		function renderTables(elementStatus, textStatus, jqXHR) {
+			clearStatusBar();
 
 			// first let's empty out the existing table(s)
-			if ($.fn.dataTable.fnIsDataTable(document.getElementById('#statusTable'))) {
-				$('#statusTable').dataTable().fnDestroy();
-			}
 			var headerTable = $('#headerTable').empty();
-			var statusTable = $('#statusTable').empty();
+			var statusTableHeader = $('#statusTable thead').empty();
+			var statusTableBody = $('#statusTable tbody').empty();
 			var topologyTable = $('#topologyTable').empty();
 
 			// display topological dependencies, if there
@@ -164,61 +179,14 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 					+ elementStatus.name + "<br/><small><small>" + elementStatus.status + " for " + stateLength
 					+ "</small></small>" + "</a></th><th>" + getStatusIcon(elementStatus.status) + "</th></tr>");
 
-			$.each(elementStatus.monitorStatus,
-					function() {
-						// only display the monitors that are
-						// visible (no hidden ones; ppg, etc)
-						if (this.isHidden == false) {
-							var alink = "<a href='" + uptimeGadget.getElementUrls(elementStatus.id, elementStatus.name).services
-									+ "' target='_top'>";
-							var monitorName = "<td>" + alink + this.name + "</a></td>";
-							var monitorStatus = "<td class='color-text-" + this.status.toUpperCase() + "'>" + this.status
-									+ "</td>";
-							var monitorLastCheck = "";
-							var monitorLastTransition = "";
-							var monitorMessage = "";
-							var monitorIsAckd = "";
-							var monitorAckMessage = "";
-
-							if (doLastCheckTime) {
-								monitorLastCheck = "<td>" + this.lastCheckTime + "</td>";
-							}
-							if (doLastTransitionTime) {
-								monitorLastTransition = "<td>"
-										+ DateDiff.getDifferenceInEnglish(currentDateTime, Date.parse(this.lastTransitionTime))
-										+ "</td>";
-							}
-							if (doMessage) {
-								monitorMessage = "<td>" + this.message + "</td>";
-							}
-							if (doIsAcknowledged) {
-								monitorIsAckd = "<td>" + this.isAcknowledged + "</td>";
-							}
-							if (doAcknowledgedComment) {
-								monitorAckMessage = "<td>" + ((this.acknowledgedComment) ? this.acknowledgedComment : " ")
-										+ "</td>";
-							}
-
-							statusTable.append("<tr>" + monitorName + monitorStatus + monitorLastCheck + monitorLastTransition
-									+ monitorMessage + monitorIsAckd + monitorAckMessage + "</tr>");
-						}
-					});
-
-			// DataTable
-			statusTable.dataTable({
-				"aoColumnDefs" : dataTableColumns,
-				"aaSorting" : [ [ 1, "asc" ], [ 0, "asc" ] ],
-				"bInfo" : false,
-				"bPaginate" : false,
-				"bFilter" : false
-			});
-
+			statusTableHeader.append(renderStatusTableHeaderRow());
+			statusTableBody.append(renderStatusTableRows(elementStatus.monitorStatus, elementStatus, currentDateTime));
 		}
 
 		function updateChart() {
 			$.ajax("/api/v1/elements/" + elementId + "/status", {
 				cache : false
-			}).done(renderTable).fail(
+			}).done(renderTables).fail(
 					function(jqXHR, textStatus, errorThrown) {
 						displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
 								"Error Getting Element Status from up.time Controller");
@@ -243,10 +211,8 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 				}
 			},
 			destroy : function() {
+				$('#statusTable tbody').off('click');
 				stopChartTimer();
-				if ($.fn.dataTable.fnIsDataTable(document.getElementById('#statusTable'))) {
-					$('#statusTable').dataTable().fnDestroy();
-				}
 			}
 		};
 		return publicFns; // Important: we need to return the public
