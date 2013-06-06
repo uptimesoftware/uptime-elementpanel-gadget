@@ -1,3 +1,11 @@
+html {
+	overflow: auto !important;
+}
+
+body {
+	overflow: auto !important;
+}
+
 #bigTableHeading {
 	padding: 7px;
 	text-align: left;

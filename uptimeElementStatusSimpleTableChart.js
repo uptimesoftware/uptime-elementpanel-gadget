@@ -228,22 +228,24 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			chartTimer = window.setTimeout(updateChart, refreshRate * 1000);
 		}
 
-		// function to make sure we return two digits (09 instead of 9, 00
-		// instead of 0, etc) for date/time (used for Last Refresh Time)
-		function checkDateTimeTwoDigits(time) {
-			return (time < 10) ? ("0" + time) : time;
+		function stopChartTimer() {
+			if (chartTimer) {
+				window.clearTimeout(chartTimer);
+			}
 		}
 
 		// public functions for this function/class
 		var publicFns = {
-			stopTimer : function() {
-				if (chartTimer) {
-					window.clearTimeout(chartTimer);
-				}
-			},
+			stopTimer : stopChartTimer,
 			startTimer : function() {
 				if (chartTimer) {
 					updateChart();
+				}
+			},
+			destroy : function() {
+				stopChartTimer();
+				if ($.fn.dataTable.fnIsDataTable(document.getElementById('#statusTable'))) {
+					$('#statusTable').dataTable().fnDestroy();
 				}
 			}
 		};

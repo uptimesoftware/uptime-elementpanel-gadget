@@ -1,34 +1,32 @@
 $(function() {
+	var elementMonitorListSettings = {
+		'elementId' : -1,
+		'refreshRate' : 15,
+		'lastCheckTime' : true,
+		'lastTransitionTime' : true,
+		'message' : false,
+		'isAcknowledged' : false,
+		'acknowledgedComment' : false
+	};
 	var myChart = null;
 	var divsToDim = [ '#widgetChart', '#widgetSettings' ];
 
 	$("#widgetSettings").hide();
-	$("#widgetChart").hide();
 
 	$("#saveSettings").click(function() {
-		var elementId = $('#elementId').find(":selected").val();
-		var refreshRate = $('#refreshRate').val();
-		var lastCheckTime = $('#lastCheckTime').attr('checked');
-		var lastTransitionTime = $('#lastTransitionTime').attr('checked');
-		var message = $('#message').attr('checked');
-		var isAcknowledged = $('#isAcknowledged').attr('checked');
-		var acknowledgedComment = $('#acknowledgedComment').attr('checked');
+		elementMonitorListSettings.elementId = $('#elementId').val();
+		elementMonitorListSettings.refreshRate = $('#refreshRate').val();
+		elementMonitorListSettings.lastCheckTime = $('#lastCheckTime').attr('checked');
+		elementMonitorListSettings.lastTransitionTime = $('#lastTransitionTime').attr('checked');
+		elementMonitorListSettings.message = $('#message').attr('checked');
+		elementMonitorListSettings.isAcknowledged = $('#isAcknowledged').attr('checked');
+		elementMonitorListSettings.acknowledgedComment = $('#acknowledgedComment').attr('checked');
 
-		var settings = {
-			'elementId' : elementId,
-			'refreshRate' : refreshRate,
-			'lastCheckTime' : lastCheckTime,
-			'lastTransitionTime' : lastTransitionTime,
-			'message' : message,
-			'isAcknowledged' : isAcknowledged,
-			'acknowledgedComment' : acknowledgedComment
-		};
-		uptimeGadget.saveSettings(settings).then(onGoodSave, onBadAjax);
+		uptimeGadget.saveSettings(elementMonitorListSettings).then(onGoodSave, onBadAjax);
 	});
 
 	$("#cancelSettings").click(function() {
-		$("#widgetChart").show();
-		$("#widgetSettings").hide();
+		$("#widgetSettings").slideUp();
 		if (myChart) {
 			myChart.startTimer();
 		}
@@ -40,7 +38,10 @@ $(function() {
 	});
 
 	function saveSettings() {
-
+		if ($.isEmptyObject(elementMonitorListSettings)) {
+			return;
+		}
+		uptimeGadget.saveSettings(settings).then(onGoodSave, onBadAjax);
 	}
 
 	function showEditPanel() {
@@ -49,13 +50,12 @@ $(function() {
 		if (myChart) {
 			myChart.stopTimer();
 		}
-		$("#widgetSettings").show();
-		$("#widgetChart").hide();
+		$("#widgetSettings").slideDown();
+		return populateIdSelector();
 	}
 
 	function displayPanel(settings) {
-		$("#widgetChart").show();
-		$("#widgetSettings").hide();
+		$("#widgetSettings").slideUp();
 
 		// Display the chart
 		displayChart(settings);
@@ -65,36 +65,46 @@ $(function() {
 		return naturalSort(arg1.name, arg2.name);
 	}
 
-	// Main Gadget Logic Start
-	function onGoodLoad(settings) {
+	function populateIdSelector() {
+		var deferred = UPTIME.pub.gadgets.promises.defer();
+		$('#elementId').empty().append($("<option />").val(-1).text("Loading..."));
 		$.ajax("/api/v1/elements/", {
 			cache : false
 		}).done(function(data, textStatus, jqXHR) {
 			clearStatusBar();
 			// fill in element drop down list
 			data.sort(elementSort);
-			var elementSelector = $('#elementId');
+			var elementSelector = $('#elementId').empty();
 			$.each(data, function() {
 				if (!this.isMonitored) {
 					return;
 				}
 				elementSelector.append($("<option />").val(this.id).text(this.name));
 			});
-
-			// load existing saved settings, now that the drop down list has
-			// been loaded
-			if (settings) {
-				// update (hidden) edit panel with settings
-				$("#elementId").val(settings.elementId);
-				$("#" + settings.chartType).prop("checked", true);
-				$("#refreshRate").val(settings.refreshRate);
+			if (elementMonitorListSettings.elementId >= 0) {
+				elementSelector.val(elementMonitorListSettings.elementId);
 			}
-		}).fail(
-				function(jqXHR, textStatus, errorThrown) {
-					displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
-							"Error Loading the List of Elements from up.time Controller");
-				});
+			deferred.resolve(true);
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			deferred.reject(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this));
+		});
+		return deferred.promise.then(null, function(error) {
+			displayStatusBar(error, "Error Loading the List of Elements from up.time Controller");
+		});
+	}
 
+	// Main Gadget Logic Start
+	function onGoodLoad(settings) {
+		if (settings) {
+			// update (hidden) edit panel with settings
+			$("#refreshRate").val(settings.refreshRate);
+			$('#lastCheckTime').val(settings.lastCheckTime);
+			$('#lastTransitionTime').val(settings.lastTransitionTime);
+			$('#message').val(settings.message);
+			$('#isAcknowledged').val(settings.isAcknowledged);
+			$('#acknowledgedComment').val(settings.acknowledgedComment);
+			$.extend(elementMonitorListSettings, settings);
+		}
 		if (settings) {
 			displayPanel(settings);
 		} else {
@@ -142,10 +152,9 @@ $(function() {
 	}
 
 	function displayChart(settings) {
-		// stop any existing timers in the charts (for when we save and change
-		// settings)
+		// clean up any resources before creating a new chart.
 		if (myChart) {
-			myChart.stopTimer();
+			myChart.destroy();
 		}
 
 		// display chart
