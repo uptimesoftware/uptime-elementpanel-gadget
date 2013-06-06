@@ -170,9 +170,8 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			var divboxes = "";
 			if (deps.length > 0) {
 				for ( var i = 0; i < deps.length; i++) {
-					var alink = "<a href='/main.php?section=Profile&subsection=&id=" + deps[i].id + "&name=" + deps[i].name
-							+ "&dlsection=s_status' target='_top'>";
-					divboxes += alink + '<div class="topoBox color-text-' + deps[i].status.toUpperCase() + '">' + deps[i].name
+					var link = "<a href='" + uptimeGadget.getElementUrls(deps[i].id, deps[i].name).graphing + "' target='_top'>";
+					divboxes += link + '<div class="topoBox color-text-' + deps[i].status.toUpperCase() + '">' + deps[i].name
 							+ "</div></a>";
 				}
 			}
