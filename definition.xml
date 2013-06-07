@@ -35,9 +35,9 @@
 				<div class="monitorInfoDiv editSection">
 					Display:
 					<br/>
-					<input type="checkbox" checked id="lastCheckTime" name="columnOptions" value="lastCheckTime"> Last Check Time
-					<br/>
 					<input type="checkbox" checked id="lastTransitionTime" name="columnOptions" value="lastTransitionTime"> Duration
+					<br/>
+					<input type="checkbox" checked id="lastCheckTime" name="columnOptions" value="lastCheckTime"> Last Check Time
 					<br/>
 					<input type="checkbox"  id="message" name="columnOptions" value="message"> Monitor Message
 					<br/>

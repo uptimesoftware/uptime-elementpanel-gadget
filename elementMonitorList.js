@@ -2,8 +2,8 @@ $(function() {
 	var elementMonitorListSettings = {
 		'elementId' : -1,
 		'refreshRate' : 15,
-		'lastCheckTime' : true,
 		'lastTransitionTime' : true,
+		'lastCheckTime' : false,
 		'message' : false,
 		'isAcknowledged' : false,
 		'acknowledgedComment' : false
@@ -16,11 +16,11 @@ $(function() {
 	$("#saveSettings").click(function() {
 		elementMonitorListSettings.elementId = $('#elementId').val();
 		elementMonitorListSettings.refreshRate = $('#refreshRate').val();
-		elementMonitorListSettings.lastCheckTime = $('#lastCheckTime').attr('checked');
-		elementMonitorListSettings.lastTransitionTime = $('#lastTransitionTime').attr('checked');
-		elementMonitorListSettings.message = $('#message').attr('checked');
-		elementMonitorListSettings.isAcknowledged = $('#isAcknowledged').attr('checked');
-		elementMonitorListSettings.acknowledgedComment = $('#acknowledgedComment').attr('checked');
+		elementMonitorListSettings.lastCheckTime = $('#lastCheckTime').prop('checked');
+		elementMonitorListSettings.lastTransitionTime = $('#lastTransitionTime').prop('checked');
+		elementMonitorListSettings.message = $('#message').prop('checked');
+		elementMonitorListSettings.isAcknowledged = $('#isAcknowledged').prop('checked');
+		elementMonitorListSettings.acknowledgedComment = $('#acknowledgedComment').prop('checked');
 
 		uptimeGadget.saveSettings(elementMonitorListSettings).then(onGoodSave, onBadAjax);
 	});
@@ -51,6 +51,12 @@ $(function() {
 			myChart.stopTimer();
 		}
 		$("#widgetSettings").slideDown();
+		$("#refreshRate").val(elementMonitorListSettings.refreshRate);
+		$('#lastCheckTime').prop('checked', elementMonitorListSettings.lastCheckTime);
+		$('#lastTransitionTime').prop('checked', elementMonitorListSettings.lastTransitionTime);
+		$('#message').prop('checked', elementMonitorListSettings.message);
+		$('#isAcknowledged').prop('checked', elementMonitorListSettings.isAcknowledged);
+		$('#acknowledgedComment').prop('checked', elementMonitorListSettings.acknowledgedComment);
 		return populateIdSelector();
 	}
 
@@ -98,11 +104,11 @@ $(function() {
 		if (settings) {
 			// update (hidden) edit panel with settings
 			$("#refreshRate").val(settings.refreshRate);
-			$('#lastCheckTime').val(settings.lastCheckTime);
-			$('#lastTransitionTime').val(settings.lastTransitionTime);
-			$('#message').val(settings.message);
-			$('#isAcknowledged').val(settings.isAcknowledged);
-			$('#acknowledgedComment').val(settings.acknowledgedComment);
+			$('#lastCheckTime').prop('checked', settings.lastCheckTime);
+			$('#lastTransitionTime').prop('checked', settings.lastTransitionTime);
+			$('#message').prop('checked', settings.message);
+			$('#isAcknowledged').prop('checked', settings.isAcknowledged);
+			$('#acknowledgedComment').prop('checked', settings.acknowledgedComment);
 			$.extend(elementMonitorListSettings, settings);
 		}
 		if (settings) {
