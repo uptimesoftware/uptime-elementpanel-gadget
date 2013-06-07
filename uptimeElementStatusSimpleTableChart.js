@@ -85,8 +85,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function nameLink(monitorStatus, field, elementStatus, now) {
-			var linkPrefix = "<a href='" + uptimeGadget.getElementUrls(elementStatus.id, elementStatus.name).services
-					+ "' target='_top'>";
+			var linkPrefix = "<a href='" + uptimeGadget.getMonitorUrl(monitorStatus.id) + "' target='_top'>";
 			return linkPrefix + monitorStatus[field] + "</a>";
 		}
 
