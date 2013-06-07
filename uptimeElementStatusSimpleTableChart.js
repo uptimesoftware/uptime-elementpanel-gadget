@@ -46,7 +46,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		// display the table (first time)
 		updateChart();
 
-		var statusTableSort = (function() {
+		var statusSort = (function() {
 			var statusMap = {
 				'CRIT' : 0,
 				'WARN' : 1,
@@ -124,7 +124,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		function renderStatusTableRows(monitorStatuses, elementStatus, now) {
 			var rows = [];
 
-			monitorStatuses.sort(statusTableSort);
+			monitorStatuses.sort(statusSort);
 			$.each(monitorStatuses, function(i, monitorStatus) {
 				if (monitorStatus.isHidden) {
 					return;
@@ -167,6 +167,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			// display topological dependencies, if there
 			// are any
 			var deps = elementStatus.topologyParentStatus;
+			deps.sort(statusSort);
 			var divboxes = "";
 			if (deps.length > 0) {
 				for ( var i = 0; i < deps.length; i++) {
