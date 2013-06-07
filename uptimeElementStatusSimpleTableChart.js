@@ -41,7 +41,8 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			statusCells.push(getStatusCellSpec("acknowledgedComment", directValue, "Ack Message"));
 		}
 
-		$('#statusTable tbody').on('click', onTableRowClick);
+		$('#statusTable tbody').on('click', onStatusClick);
+		$('#elementStatus').on('click', onStatusClick);
 
 		// display the table (first time)
 		updateChart();
@@ -93,23 +94,6 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			return DateDiff.getDifferenceInEnglish(now, Date.parse(monitorStatus[field]));
 		}
 
-		function getStatusIcon(status) {
-			switch (status.toUpperCase()) {
-			case "CRIT":
-				return '<span class="status-icon color-icon-CRIT"><i class="icon-minus-sign"></i></span>';
-			case "WARN":
-				return '<span class="status-icon color-icon-WARN"><i class="icon-warning-sign"></i></span>';
-			case "OK":
-				return '<span class="status-icon color-icon-OK"><i class="icon-ok"></i></span>';
-			case "UNKNOWN":
-				return '<span class="status-icon color-icon-UNKNOWN"><i class="icon-question-sign"></i></span>';
-			case "MAINT":
-				return '<span class="status-icon color-icon-MAINT"><i class="icon-exclamation-sign"></i></span>';
-			default:
-				return '<span class="status-icon color-icon-UNKNOWN"><i class="icon-question-sign"></i></span>';
-			}
-		}
-
 		function renderStatusTableHeaderRow() {
 			var headerRow = '<tr>';
 			$.each(statusCells, function() {
@@ -139,7 +123,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			return rows.join('');
 		}
 
-		function onTableRowClick(e) {
+		function onStatusClick(e) {
 			window.top.location.href = $('a:first', e.currentTarget).attr('href');
 		}
 
@@ -210,6 +194,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			},
 			destroy : function() {
 				$('#statusTable tbody').off('click');
+				$('#elementStatus').off('click');
 				stopChartTimer();
 			}
 		};

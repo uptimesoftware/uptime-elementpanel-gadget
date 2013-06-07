@@ -33,6 +33,10 @@ table {
 	border-bottom-width: 2px;
 }
 
+#elementStatus:hover {
+	cursor: pointer;
+}
+
 #topoParentsStatus {
 	width: 99%;
 	padding: 2px;
