@@ -2,16 +2,15 @@ if (typeof UPTIME == "undefined") {
 	var UPTIME = {};
 }
 
-// Define class/function name
 if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 	UPTIME.ElementStatusSimpleTableChart = function(options, displayStatusBar, clearStatusBar) {
 		var elementId = null;
 		var refreshRate = null;
-		var lastCheckTime = null;
-		var lastTransitionTime = null;
-		var message = null;
-		var isAcknowledged = null;
-		var acknowledgedComment = null;
+		var doLastCheckTime = null;
+		var doLastTransitionTime = null;
+		var doMessage = null;
+		var doIsAcknowledged = null;
+		var doAcknowledgedComment = null;
 
 		var chartTimer = null;
 
@@ -25,9 +24,11 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			doAcknowledgedComment = options.acknowledgedComment;
 		}
 
-		var statusCells = [ getStatusCellSpec("name", nameLink, "Monitor"), getStatusCellSpec("status", directValue, "Status"),
-				getStatusCellSpec("lastTransitionTime", durationValue, "Duration") ];
+		var statusCells = [ getStatusCellSpec("name", nameLink, "Monitor"), getStatusCellSpec("status", directValue, "Status") ];
 
+		if (doLastTransitionTime) {
+			statusCells.push(getStatusCellSpec("lastTransitionTime", durationValue, "Duration"));
+		}
 		if (doLastCheckTime) {
 			statusCells.push(getStatusCellSpec("lastCheckTime", directValue, "Last Check"));
 		}
