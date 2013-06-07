@@ -36,6 +36,7 @@ $(function() {
 	uptimeGadget.registerOnLoadHandler(function() {
 		uptimeGadget.loadSettings().then(onGoodLoad, onBadAjax);
 	});
+	uptimeGadget.registerOnResizeHandler(resizeGadget);
 
 	function saveSettings() {
 		if ($.isEmptyObject(elementMonitorListSettings)) {
@@ -44,19 +45,24 @@ $(function() {
 		uptimeGadget.saveSettings(settings).then(onGoodSave, onBadAjax);
 	}
 
+	function resizeGadget() {
+		$("body").height($(window).height());
+	}
+
 	function showEditPanel() {
 		// stop any existing timers in the charts (for when we save and change
 		// settings)
 		if (myChart) {
 			myChart.stopTimer();
 		}
-		$("#widgetSettings").slideDown();
 		$("#refreshRate").val(elementMonitorListSettings.refreshRate);
 		$('#lastCheckTime').prop('checked', elementMonitorListSettings.lastCheckTime);
 		$('#lastTransitionTime').prop('checked', elementMonitorListSettings.lastTransitionTime);
 		$('#message').prop('checked', elementMonitorListSettings.message);
 		$('#isAcknowledged').prop('checked', elementMonitorListSettings.isAcknowledged);
 		$('#acknowledgedComment').prop('checked', elementMonitorListSettings.acknowledgedComment);
+		$("#widgetSettings").slideDown();
+		resizeGadget();
 		return populateIdSelector();
 	}
 
@@ -65,6 +71,7 @@ $(function() {
 
 		// Display the chart
 		displayChart(settings);
+		resizeGadget();
 	}
 
 	function elementSort(arg1, arg2) {

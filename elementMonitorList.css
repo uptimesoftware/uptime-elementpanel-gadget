@@ -40,7 +40,8 @@ table {
 }
 
 #topoParentsStatus p {
-	line-height: 25%;
+	margin: 0px;
+	padding: 2px;
 }
 
 a {
