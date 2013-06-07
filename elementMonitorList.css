@@ -10,6 +10,19 @@ table {
 	border-collapse: collapse;
 }
 
+#widgetChart {
+	padding-top: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#widgetSettings {
+	border: 2px #BDBDBD solid;
+	border-radius: 5px;
+	padding: 10px;
+	background-color: #FDFDFD;
+}
+
 #statusTable td {
 	padding: 5px;
 	border-top-style: solid;
@@ -64,6 +77,7 @@ table {
 #topoParentsStatus p {
 	margin: 0px;
 	padding: 2px;
+	padding-top: 0px;
 }
 
 a {
