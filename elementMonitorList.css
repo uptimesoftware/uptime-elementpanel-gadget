@@ -28,6 +28,9 @@ table {
 	white-space: nowrap;
 	padding: 15px;
 	font-size: 200%;
+	border-bottom-style: solid;
+	border-bottom-color: white;
+	border-bottom-width: 2px;
 }
 
 #topoParentsStatus {
@@ -58,7 +61,10 @@ th {
 	float: left;
 	padding: 5px;
 	margin: 0px 0px 1px 1px;
-	border-radius: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: transparent;
+	border-radius: 3px;
 }
 
 .topoBox:hover, .status-row:hover {
