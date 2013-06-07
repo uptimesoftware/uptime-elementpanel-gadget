@@ -8,7 +8,7 @@
 
 <html lang="en">
 	<head>
-		#includeResources(jquery)
+		#includeResources(jquery,jqueryui)
 
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -28,26 +28,26 @@
 			<form id="widgetOptions">
 				<div class="elementSelectorDiv editSection">
 					<label for="elementId">Select Element:</label><br/>
-					<select id="elementId">
+					<select id="elementId" class="widget-option">
 						<option value="-1">Loading...</option>
 					</select>
 				</div>
 				<div class="monitorInfoDiv editSection">
 					Display:
 					<br/>
-					<input type="checkbox" checked id="lastTransitionTime" name="columnOptions" value="lastTransitionTime"> Duration
+					<input type="checkbox" checked id="lastTransitionTime" class="widget-option" name="columnOptions" value="lastTransitionTime"> Duration
 					<br/>
-					<input type="checkbox" checked id="lastCheckTime" name="columnOptions" value="lastCheckTime"> Last Check Time
+					<input type="checkbox" id="lastCheckTime" class="widget-option" name="columnOptions" value="lastCheckTime"> Last Check Time
 					<br/>
-					<input type="checkbox"  id="message" name="columnOptions" value="message"> Monitor Message
+					<input type="checkbox"  id="message" class="widget-option" name="columnOptions" value="message"> Monitor Message
 					<br/>
-					<input type="checkbox"  id="isAcknowledged" name="columnOptions" value="isAcknowledged"> Is Acknowledged
+					<input type="checkbox"  id="isAcknowledged" class="widget-option" name="columnOptions" value="isAcknowledged"> Is Acknowledged
 					<br/>
-					<input type="checkbox"  id="acknowledgedComment" name="columnOptions" value="acknowledgedComment"> Acknowledgement Comment
+					<input type="checkbox"  id="acknowledgedComment" class="widget-option" name="columnOptions" value="acknowledgedComment"> Acknowledgement Comment
 				</div>
 				<div class="refreshRateDiv editSection">
 					<label for="refreshRate">Refresh Rate:</label>
-					<select id="refreshRate" name="refreshRate">
+					<select id="refreshRate" class="widget-option" name="refreshRate">
 						<option value="30">30s</option>
 						<option value="60">1m</option>
 						<option value="300">5m</option>
@@ -58,8 +58,7 @@
 					</select>
 				</div>
 				<div class="buttonsDiv">
-					<input id="saveSettings" type="button" value="Save"/>
-					<input id="cancelSettings" type="button" value="Cancel"/>
+					<input id="closeSettings" type="button" value="Close"/>
 				</div>
 			</form>
 		</div>

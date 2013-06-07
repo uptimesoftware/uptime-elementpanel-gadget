@@ -13,23 +13,10 @@ $(function() {
 
 	$("#widgetSettings").hide();
 
-	$("#saveSettings").click(function() {
-		elementMonitorListSettings.elementId = $('#elementId').val();
-		elementMonitorListSettings.refreshRate = $('#refreshRate').val();
-		elementMonitorListSettings.lastCheckTime = $('#lastCheckTime').prop('checked');
-		elementMonitorListSettings.lastTransitionTime = $('#lastTransitionTime').prop('checked');
-		elementMonitorListSettings.message = $('#message').prop('checked');
-		elementMonitorListSettings.isAcknowledged = $('#isAcknowledged').prop('checked');
-		elementMonitorListSettings.acknowledgedComment = $('#acknowledgedComment').prop('checked');
+	$('.widget-option').change(settingChanged);
 
-		uptimeGadget.saveSettings(elementMonitorListSettings).then(onGoodSave, onBadAjax);
-	});
-
-	$("#cancelSettings").click(function() {
+	$("#closeSettings").button().click(function() {
 		$("#widgetSettings").slideUp();
-		if (myChart) {
-			myChart.startTimer();
-		}
 	});
 
 	uptimeGadget.registerOnEditHandler(showEditPanel);
@@ -38,11 +25,16 @@ $(function() {
 	});
 	uptimeGadget.registerOnResizeHandler(resizeGadget);
 
-	function saveSettings() {
-		if ($.isEmptyObject(elementMonitorListSettings)) {
-			return;
-		}
-		uptimeGadget.saveSettings(settings).then(onGoodSave, onBadAjax);
+	function settingChanged() {
+		elementMonitorListSettings.elementId = $('#elementId').val();
+		elementMonitorListSettings.refreshRate = $('#refreshRate').val();
+		elementMonitorListSettings.lastTransitionTime = $('#lastTransitionTime').prop('checked');
+		elementMonitorListSettings.lastCheckTime = $('#lastCheckTime').prop('checked');
+		elementMonitorListSettings.lastTransitionTime = $('#lastTransitionTime').prop('checked');
+		elementMonitorListSettings.message = $('#message').prop('checked');
+		elementMonitorListSettings.isAcknowledged = $('#isAcknowledged').prop('checked');
+		elementMonitorListSettings.acknowledgedComment = $('#acknowledgedComment').prop('checked');
+		uptimeGadget.saveSettings(elementMonitorListSettings).then(onGoodSave, onBadAjax);
 	}
 
 	function resizeGadget() {
@@ -66,10 +58,19 @@ $(function() {
 		return populateIdSelector();
 	}
 
-	function displayPanel(settings) {
-		$("#widgetSettings").slideUp();
+	function disableSettings() {
+		$('.widget-option').prop('disabled', true);
+		$('#closeButton').prop('disabled', true).addClass("ui-state-disabled");
+	}
 
+	function enableSettings() {
+		$('.widget-option').prop('disabled', false);
+		$('#closeButton').prop('disabled', false).removeClass("ui-state-disabled");
+	}
+
+	function displayPanel(settings) {
 		// Display the chart
+		$('#widgetChart').show();
 		displayChart(settings);
 		resizeGadget();
 	}
@@ -79,12 +80,14 @@ $(function() {
 	}
 
 	function populateIdSelector() {
+		disableSettings();
 		var deferred = UPTIME.pub.gadgets.promises.defer();
 		$('#elementId').empty().append($("<option />").val(-1).text("Loading..."));
 		$.ajax("/api/v1/elements/", {
 			cache : false
 		}).done(function(data, textStatus, jqXHR) {
 			clearStatusBar();
+			enableSettings();
 			// fill in element drop down list
 			data.sort(elementSort);
 			var elementSelector = $('#elementId').empty();
@@ -99,6 +102,7 @@ $(function() {
 			}
 			deferred.resolve(true);
 		}).fail(function(jqXHR, textStatus, errorThrown) {
+			enableSettings();
 			deferred.reject(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this));
 		});
 		return deferred.promise.then(null, function(error) {
@@ -111,8 +115,8 @@ $(function() {
 		if (settings) {
 			// update (hidden) edit panel with settings
 			$("#refreshRate").val(settings.refreshRate);
-			$('#lastCheckTime').prop('checked', settings.lastCheckTime);
 			$('#lastTransitionTime').prop('checked', settings.lastTransitionTime);
+			$('#lastCheckTime').prop('checked', settings.lastCheckTime);
 			$('#message').prop('checked', settings.message);
 			$('#isAcknowledged').prop('checked', settings.isAcknowledged);
 			$('#acknowledgedComment').prop('checked', settings.acknowledgedComment);
@@ -121,7 +125,10 @@ $(function() {
 		if (settings) {
 			displayPanel(settings);
 		} else {
-			showEditPanel();
+			$('#widgetChart').hide();
+			showEditPanel().then(function() {
+				settingChanged();
+			});
 		}
 	}
 
