@@ -46,8 +46,16 @@
 					<input type="checkbox"  id="acknowledgedComment" name="columnOptions" value="acknowledgedComment"> Acknowledgement Comment
 				</div>
 				<div class="refreshRateDiv editSection">
-					Refresh Rate:
-					<input type="text" checked id="refreshRate" name="refreshRate" value="15"> seconds
+					<label for="refreshRate">Refresh Rate:</label>
+					<select id="refreshRate" name="refreshRate">
+						<option value="30">30s</option>
+						<option value="60">1m</option>
+						<option value="300">5m</option>
+						<option value="600">10m</option>
+						<option value="900">15m</option>
+						<option value="3600">1h</option>
+						<option value="-1">Never</option>
+					</select>
 				</div>
 				<div class="buttonsDiv">
 					<input id="saveSettings" type="button" value="Save"/>

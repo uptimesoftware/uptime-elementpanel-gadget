@@ -1,7 +1,7 @@
 $(function() {
 	var elementMonitorListSettings = {
 		'elementId' : -1,
-		'refreshRate' : 15,
+		'refreshRate' : 30,
 		'lastTransitionTime' : true,
 		'lastCheckTime' : false,
 		'message' : false,
