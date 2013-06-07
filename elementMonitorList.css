@@ -25,8 +25,10 @@ table {
 }
 
 #elementStatus {
+	position: relative;
 	white-space: nowrap;
 	padding: 15px;
+	padding-left: 10px;
 	font-size: 200%;
 	border-bottom-style: solid;
 	border-bottom-color: white;
@@ -35,6 +37,22 @@ table {
 
 #elementStatus:hover {
 	cursor: pointer;
+}
+
+#elementStatusText {
+	padding-left: 30px;
+}
+
+.os-icon {
+	position: absolute;
+	top: 15px;
+	left: 10px;
+	background-color: rgba(255, 255, 255, 0.8);
+	float: left;
+	padding-top: 2px;
+	padding-right: 2px;
+	margin-right: 5px;
+	border-radius: 3px;
 }
 
 #topoParentsStatus {

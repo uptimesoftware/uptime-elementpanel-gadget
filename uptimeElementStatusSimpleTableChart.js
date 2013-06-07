@@ -140,12 +140,12 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			var lastTransitionDateTime = Date.parse(elementStatus.lastTransitionTime);
 
 			var stateLength = DateDiff.getDifferenceInEnglish(currentDateTime, lastTransitionDateTime);
-			$('#elementStatus').html(
+			$('#elementStatus').removeClass('color-text-CRIT color-text-WARN color-text-MAINT color-text-UNKNOWN color-text-OK')
+					.addClass('color-text-' + elementStatus.status.toUpperCase());
+			$('#elementStatusText').html(
 					"<a href='" + uptimeGadget.getElementUrls(elementStatus.id, elementStatus.name).graphing + "' target='_top'>"
 							+ elementStatus.name + "<br/><small><small>" + elementStatus.status + " for " + stateLength
-							+ "</small></small>" + "</a>").removeClass(
-					'color-text-CRIT color-text-WARN color-text-MAINT color-text-UNKNOWN color-text-OK').addClass(
-					'color-text-' + elementStatus.status.toUpperCase());
+							+ "</small></small>" + "</a>");
 
 			// display topological dependencies, if there
 			// are any
@@ -165,7 +165,18 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			statusTableBody.append(renderStatusTableRows(elementStatus.monitorStatus, elementStatus, currentDateTime));
 		}
 
+		function renderOsIcon(element, textStatus, jqXHR) {
+			$('img.os-icon-img').attr('src', uptimeGadget.getLargeSystemOsIconUrl(element.typeSubtype));
+		}
+
 		function updateChart() {
+			$.ajax("/api/v1/elements/" + elementId, {
+				cache : false
+			}).done(renderOsIcon).fail(
+					function(jqXHR, textStatus, errorThrown) {
+						displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
+								"Error Getting Element from up.time Controller");
+					});
 			$.ajax("/api/v1/elements/" + elementId + "/status", {
 				cache : false
 			}).done(renderTables).fail(
