@@ -182,7 +182,9 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 					});
 
 			// Now let's set refresh rate for updating the table
-			chartTimer = window.setTimeout(updateChart, refreshRate * 1000);
+			if (refreshRate > 0) {
+				chartTimer = window.setTimeout(updateChart, refreshRate * 1000);
+			}
 		}
 
 		function stopChartTimer() {
