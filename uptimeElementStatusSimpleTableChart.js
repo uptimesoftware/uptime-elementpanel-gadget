@@ -60,10 +60,6 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 				if (sort != 0) {
 					return sort;
 				}
-				sort = Date.parse(arg2.lastTransitionTime) - Date.parse(arg1.lastTransitionTime);
-				if (sort != 0) {
-					return sort;
-				}
 				sort = naturalSort(arg1.name, arg2.name);
 				if (sort != 0) {
 					return sort;
