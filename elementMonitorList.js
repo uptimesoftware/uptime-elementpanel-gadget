@@ -13,7 +13,7 @@ $(function() {
 
 	$("#widgetSettings").hide();
 
-	$('.widget-option').change(settingChanged);
+	$('.widget-option').change($.debounce(500, settingChanged));
 
 	$("#closeSettings").button().click(function() {
 		$("#widgetSettings").slideUp();
