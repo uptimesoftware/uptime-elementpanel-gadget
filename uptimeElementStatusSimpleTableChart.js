@@ -164,6 +164,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 		function renderOsIcon(element, textStatus, jqXHR) {
 			$('img.os-icon-img').attr('src', uptimeGadget.getLargeSystemOsIconUrl(element.typeSubtype));
+			$('img.os-icon-img').attr('title', element.typeOs);
 		}
 
 		function updateChart() {
