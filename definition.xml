@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?> 
 <Module>
-  <ModulePrefs title="Element Monitor List">
+  <ModulePrefs title="Element Panel" 
+		description="Display a status summary for a single element."
+		thumbnail="elementPanelThm.png">
     <Require feature="dynamic-height"/>
   </ModulePrefs>
   <Content type="html">
