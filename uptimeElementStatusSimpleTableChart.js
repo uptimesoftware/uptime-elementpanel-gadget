@@ -88,7 +88,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function durationValue(monitorStatus, field, elementStatus, now) {
-			return DateDiff.getDifferenceInEnglish(now, Date.parse(monitorStatus[field]));
+			return getDuration(now, monitorStatus[field]);
 		}
 
 		function renderStatusTableHeaderRow() {
@@ -124,6 +124,21 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			window.top.location.href = $('a:first', e.currentTarget).attr('href');
 		}
 
+		function parseLocaltimeFromISO8601(dateString) {
+			var parts = dateString.match(/\d+/g);
+			return new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]);
+		}
+
+		function getDuration(now, sinceDateString) {
+			var since = parseLocaltimeFromISO8601(sinceDateString);
+			var diff = now - since;
+			var msec = diff;
+			var hh = Math.floor(msec / 1000 / 60 / 60);
+			msec -= hh * 1000 * 60 * 60;
+			var mm = Math.floor(msec / 1000 / 60);
+			return hh + "h " + mm + "m";
+		}
+
 		function renderTables(elementStatus, textStatus, jqXHR) {
 			clearStatusBar();
 
@@ -132,11 +147,8 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			var statusTableBody = $('#statusTable tbody').empty();
 
 			// convert strings to dates
-			var currentDateTime = new Date();
-			currentDateTime = currentDateTime.getTime();
-			var lastTransitionDateTime = Date.parse(elementStatus.lastTransitionTime);
-
-			var stateLength = DateDiff.getDifferenceInEnglish(currentDateTime, lastTransitionDateTime);
+			var nowDate = new Date();
+			var stateLength = getDuration(nowDate, elementStatus.lastTransitionTime);
 			$('#elementStatus').removeClass('color-text-CRIT color-text-WARN color-text-MAINT color-text-UNKNOWN color-text-OK')
 					.addClass('color-text-' + elementStatus.status.toUpperCase());
 			$('#elementStatusText').html(
@@ -159,7 +171,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			$('#topoParentsStatus').html("<p>Topological Parents:</p>" + divboxes);
 
 			statusTableHeader.append(renderStatusTableHeaderRow());
-			statusTableBody.append(renderStatusTableRows(elementStatus.monitorStatus, elementStatus, currentDateTime));
+			statusTableBody.append(renderStatusTableRows(elementStatus.monitorStatus, elementStatus, nowDate));
 		}
 
 		function renderOsIcon(element, textStatus, jqXHR) {
@@ -168,6 +180,11 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function updateChart() {
+			if (!elementId || elementId < 1) {
+				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in up.time."),
+						"No Elements Found");
+				return;
+			}
 			$.ajax("/api/v1/elements/" + elementId, {
 				cache : false
 			}).done(renderOsIcon).fail(

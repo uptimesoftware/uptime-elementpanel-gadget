@@ -19,7 +19,6 @@
 		<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/elementPanel.css" />
 
 		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js"></script>		
-		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptime.CommonFunctions.js"></script>		
 		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptimeElementStatusSimpleTableChart.js"></script>
 		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/elementPanel.js"></script>		
 	</head>
