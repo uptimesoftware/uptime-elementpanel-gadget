@@ -180,7 +180,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function updateChart() {
-			if (!elementId || elementId < 1) {
+			if (!elementId || elementId < 0) {
 				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in up.time."),
 						"No Elements Found");
 				return;
