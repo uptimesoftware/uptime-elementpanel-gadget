@@ -55,7 +55,9 @@ $(function() {
 		$('#acknowledgedComment').prop('checked', elementMonitorListSettings.acknowledgedComment);
 		$("#widgetSettings").slideDown();
 		resizeGadget();
-		return populateIdSelector();
+		return populateIdSelector().then(function() {
+			settingChanged();
+		});
 	}
 
 	function disableSettings() {
@@ -126,9 +128,7 @@ $(function() {
 			displayPanel(settings);
 		} else {
 			$('#widgetChart').hide();
-			showEditPanel().then(function() {
-				settingChanged();
-			});
+			showEditPanel();
 		}
 	}
 
