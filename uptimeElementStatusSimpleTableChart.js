@@ -121,7 +121,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function onStatusClick(e) {
-			window.top.location.href = $('a:first', e.currentTarget).attr('href');
+			window.top.location.href = $(e.target).closest('tr').find('a:first').attr('href');
 		}
 
 		function parseLocaltimeFromISO8601(dateString) {
