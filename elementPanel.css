@@ -91,6 +91,8 @@ a:hover {
 }
 
 th {
+	padding-left: 5px;
+	text-align: left;
 	background-color: #C2C3C4;
 }
 
