@@ -38,7 +38,6 @@ table {
 }
 
 #elementStatus {
-	position: relative;
 	white-space: nowrap;
 	padding: 15px;
 	padding-left: 10px;
@@ -56,10 +55,13 @@ table {
 	padding-left: 30px;
 }
 
+.os-icon-container {
+	float: left;
+	width: 35px;
+	height: 40px;
+}
+
 .os-icon {
-	position: absolute;
-	top: 15px;
-	left: 10px;
 	background-color: rgba(255, 255, 255, 0.8);
 	float: left;
 	padding-top: 2px;
