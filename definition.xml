@@ -10,11 +10,11 @@
 
 <html lang="en">
 	<head>
-		#includeResources(jquery,jqueryui)
+		#includeResources(jquery)
 
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-		<title>Current Status</title>
+		<title>Element Panel</title>
 
 		<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/elementPanel.css" />
 
@@ -58,7 +58,7 @@
 					</select>
 				</div>
 				<div class="buttonsDiv">
-					<input id="closeSettings" type="button" value="Close"/>
+					<button id="closeSettings">Close</button>
 				</div>
 			</form>
 		</div>

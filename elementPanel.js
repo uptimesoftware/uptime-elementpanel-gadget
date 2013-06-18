@@ -15,7 +15,7 @@ $(function() {
 
 	$('.widget-option').change($.debounce(500, settingChanged));
 
-	$("#closeSettings").button().click(function() {
+	$("#closeSettings").click(function() {
 		$("#widgetSettings").slideUp();
 	});
 
