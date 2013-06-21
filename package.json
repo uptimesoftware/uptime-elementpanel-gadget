@@ -1,0 +1,20 @@
+{
+	"name": "uptime.ElementPanel",
+	"version": "0.1.0-SNAPSHOT",
+	"description": "Gadget which displays the status summary for a single element.",
+	"main": "src/elementPanel.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/uptimesoftware/uptime-elementMonitorList-gadget.git"
+	},
+	"dependencies": {
+ 
+		"uptime-gadget-tasks": "git://github.com/uptimesoftware/uptime-gadget-tasks.git"
+	},
+	"devDependencies": {
+		"grunt": "~0.4.1",
+		"grunt-contrib-compress": "~0.5.2",
+		"grunt-maven-tasks": "~1.0.1"
+	}
+}
+
