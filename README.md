@@ -1,6 +1,6 @@
-# Element Monitor List status gadget
+# Element Panel gadget
 
-> up.time gadget which displays the status summary for a single element.
+> Display detailed availability information for a single element including topological parents status and service monitor status.
 
 ## Getting Started
 This gadget is built using Grunt `~0.4.1`.
