@@ -140,6 +140,11 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function renderTables(elementStatus, textStatus, jqXHR) {
+			if (!elementStatus.isMonitored) {
+				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in up.time."),
+						"No Elements Found");
+				return $.Deferred().reject(jqXHR, elementStatus, 'Not YES').promise();
+			}						
 			clearStatusBar();
 
 			// first let's empty out the existing table(s)
@@ -175,6 +180,11 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 		}
 
 		function renderOsIcon(element, textStatus, jqXHR) {
+			if (!element.isMonitored) {
+				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in up.time."),
+						"No Elements Found");			
+				return $.Deferred().reject(jqXHR, element, 'Not YES').promise();
+			}				
 			$('img.os-icon-img').attr('src', uptimeGadget.getLargeSystemOsIconUrl(element.typeSubtype));
 			$('img.os-icon-img').attr('title', element.typeOs);
 		}
@@ -187,15 +197,13 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 			}
 			$.ajax("/api/v1/elements/" + elementId, {
 				cache : false
-			}).done(renderOsIcon).fail(
-					function(jqXHR, textStatus, errorThrown) {
+			}).then(renderOsIcon, function(jqXHR, textStatus, errorThrown) {
 						displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
 								"Error Getting Element from up.time Controller");
 					});
 			$.ajax("/api/v1/elements/" + elementId + "/status", {
 				cache : false
-			}).done(renderTables).fail(
-					function(jqXHR, textStatus, errorThrown) {
+			}).then(renderTables, function(jqXHR, textStatus, errorThrown) {
 						displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
 								"Error Getting Element Status from up.time Controller");
 					});
