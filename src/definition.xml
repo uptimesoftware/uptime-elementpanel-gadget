@@ -6,7 +6,7 @@
     <Require feature="dynamic-height"/>
   </ModulePrefs>
   <gadget_version>
-  	1.0
+  	<%= pkg.gadget_version %>
   </gadget_version>
   <grid_info>
     <supported_versions>
@@ -35,9 +35,9 @@
 
 		<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/elementPanel.css" />
 
-		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js"></script>		
-		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptimeElementStatusSimpleTableChart.js"></script>
-		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/elementPanel.js"></script>		
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js?v=<%= pkg.gadget_version %>"></script>		
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uptimeElementStatusSimpleTableChart.js?v=<%= pkg.gadget_version %>"></script>
+		<script type="text/javascript" src="__UPTIME_GADGET_BASE__/elementPanel.js?v=<%= pkg.gadget_version %>"></script>		
 	</head>
 	<body>
 		<div id="widgetSettings">
