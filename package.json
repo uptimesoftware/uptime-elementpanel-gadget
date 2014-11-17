@@ -1,6 +1,6 @@
 {
 	"name": "uptime.ElementPanel",
-	"version": "1.0.0-SNAPSHOT",
+	"version": "1.0.1-SNAPSHOT",
 	"description": "Display detailed availability information for a single element including topological parents status and service monitor status.",
 	"main": "src/elementPanel.js",
 	"repository": {
