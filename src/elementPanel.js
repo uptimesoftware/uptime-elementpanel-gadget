@@ -108,7 +108,7 @@ $(function() {
 			deferred.reject(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this));
 		});
 		return deferred.promise.then(null, function(error) {
-			displayStatusBar(error, "Error Loading the List of Elements from up.time Controller");
+			displayStatusBar(error, "Error Loading the List of Elements from Uptime Controller");
 		});
 	}
 
@@ -168,7 +168,7 @@ $(function() {
 	}
 
 	function onBadAjax(errorObject) {
-		displayStatusBar(errorObject, "Error Communicating with up.time");
+		displayStatusBar(errorObject, "Error Communicating with Uptime");
 	}
 
 	function displayChart(settings) {

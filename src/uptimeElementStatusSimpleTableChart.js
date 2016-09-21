@@ -141,7 +141,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 		function renderTables(elementStatus, textStatus, jqXHR) {
 			if (!elementStatus.isMonitored) {
-				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in up.time."),
+				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in Uptime."),
 						"No Elements Found");
 				return $.Deferred().reject(jqXHR, elementStatus, 'Not YES').promise();
 			}						
@@ -181,7 +181,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 		function renderOsIcon(element, textStatus, jqXHR) {
 			if (!element.isMonitored) {
-				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in up.time."),
+				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in Uptime."),
 						"No Elements Found");			
 				return $.Deferred().reject(jqXHR, element, 'Not YES').promise();
 			}				
@@ -191,7 +191,7 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 
 		function updateChart() {
 			if (!elementId || elementId < 0) {
-				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in up.time."),
+				displayStatusBar(new UPTIME.pub.errors.DisplayableError("No elements were found in Uptime."),
 						"No Elements Found");
 				return;
 			}
@@ -199,13 +199,13 @@ if (typeof UPTIME.ElementStatusSimpleTableChart == "undefined") {
 				cache : false
 			}).then(renderOsIcon, function(jqXHR, textStatus, errorThrown) {
 						displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
-								"Error Getting Element from up.time Controller");
+								"Error Getting Element from Uptime Controller");
 					});
 			$.ajax("/api/v1/elements/" + elementId + "/status", {
 				cache : false
 			}).then(renderTables, function(jqXHR, textStatus, errorThrown) {
 						displayStatusBar(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this),
-								"Error Getting Element Status from up.time Controller");
+								"Error Getting Element Status from Uptime Controller");
 					});
 
 			// Now let's set refresh rate for updating the table
